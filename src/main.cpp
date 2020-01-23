@@ -1,3 +1,12 @@
+//***********************************************************************************
+//
+// file name: main.cpp 
+//
+// purpose: This program connects ESP32 to a wifi network and creats MQTT client. 
+//          Each time the 0 button get pressed a message will be published to the topic "button"
+//
+//***********************************************************************************
+
 #include <Arduino.h>
 #include <WiFi.h>
 #include <PubSubClient.h>
