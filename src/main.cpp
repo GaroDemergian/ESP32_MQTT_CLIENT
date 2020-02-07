@@ -1,25 +1,17 @@
-//***********************************************************************************
-//
-// file name: main.cpp 
-//
-// purpose: This program connects ESP32 to a wifi network and creats MQTT client. 
-//          Each time the 0 button get pressed a message will be published to the topic "button"
-//
-//***********************************************************************************
-
+/*
 #include <Arduino.h>
 #include <WiFi.h>
 #include <PubSubClient.h>
 
-const char *ssid = "------";      // name of your WiFi network
-const char *password = "-------"; // password of the WiFi network
+const char *ssid = "Chargestorm";     // name of your WiFi network
+const char *password = "Xn3qGNew"; // password of the WiFi network
 const char *ID = "esp32";         // Name of our device, must be unique
 const char *TOPIC = "button";     // Topic to subcribe to
 const int port = 1883;
 const byte SWITCH_PIN = 0; // Pin to control the light with
 bool state = 0;
 
-IPAddress broker(192, 168, 1, 78); // IP address of your MQTT broker eg. 192.168.1.78
+IPAddress broker(127, 0, 0, 1); // IP address of your MQTT broker eg. 192.168.17.164
 WiFiClient wclient;
 PubSubClient client(wclient); // Setup MQTT client
 
@@ -107,3 +99,4 @@ void loop()
     }
   }
 }
+*/
