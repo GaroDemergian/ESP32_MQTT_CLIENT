@@ -3,8 +3,8 @@
 #include <WiFi.h>
 #include <PubSubClient.h>
 
-const char *ssid = "Chargestorm";     // name of your WiFi network
-const char *password = "Xn3qGNew"; // password of the WiFi network
+const char *ssid = "XXXXXXXXX";     // name of your WiFi network
+const char *password = "XXXXXXXX"; // password of the WiFi network
 const char *ID = "esp32";         // Name of our device, must be unique
 const char *TOPIC = "button";     // Topic to subcribe to
 const int port = 1883;
