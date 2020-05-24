@@ -1,4 +1,4 @@
-/*
+
 #include <Arduino.h>
 #include <WiFi.h>
 #include <PubSubClient.h>
@@ -99,4 +99,3 @@ void loop()
     }
   }
 }
-*/
