@@ -7,13 +7,13 @@
 
 using namespace std;
 
-const char *ssid = "Breez";
-const char *password = "breezybug133";
-const char *ID = "Enequi-Master";
-const char *TOPIC = "pbs/NG/A1/CurrentLimit";
+const char *ssid = "YOUR WIFI";
+const char *password = "WIFI PASSWORD";
+const char *ID = "ID";
+const char *TOPIC = "NAME OF YOUR TOPIC";
 const int port = 1883;
 
-IPAddress broker(192,168,1,8);
+IPAddress broker(0,0,0,0); // BROKER'S IP
 WiFiClient wclient;
 PubSubClient client(wclient);
 
