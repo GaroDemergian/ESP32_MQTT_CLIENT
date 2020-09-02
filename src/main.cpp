@@ -2,18 +2,24 @@
 #include <Arduino.h>
 #include <WiFi.h>
 #include <PubSubClient.h>
+#include <ctime>
+#include <string.h> 
 
-const char *ssid = "XXXXXXXXX";     // name of your WiFi network
-const char *password = "XXXXXXXX"; // password of the WiFi network
-const char *ID = "esp32";         // Name of our device, must be unique
-const char *TOPIC = "button";     // Topic to subcribe to
+using namespace std;
+
+const char *ssid = "Breez";
+const char *password = "breezybug133";
+const char *ID = "Enequi-Master";
+const char *TOPIC = "pbs/NG/A1/CurrentLimit";
 const int port = 1883;
-const byte SWITCH_PIN = 0; // Pin to control the light with
-bool state = 0;
 
-IPAddress broker(127, 0, 0, 1); // IP address of your MQTT broker eg. 192.168.17.164
+IPAddress broker(192,168,1,8);
 WiFiClient wclient;
-PubSubClient client(wclient); // Setup MQTT client
+PubSubClient client(wclient);
+
+int L1 = 0;
+int L2 = 0;
+int L3 = 0;
 
 // Connect to WiFi network
 void setup_wifi()
@@ -21,10 +27,11 @@ void setup_wifi()
   Serial.print("\nConnecting to ");
   Serial.println(ssid);
 
-  WiFi.begin(ssid, password); // Connect to network
+  WiFi.begin(ssid, password);
 
   while (WiFi.status() != WL_CONNECTED)
-  { // Wait for connection
+  { 
+    // Wait for connection
     delay(500);
     Serial.print(".");
   }
@@ -37,11 +44,9 @@ void setup_wifi()
 // Reconnect to client
 void reconnect()
 {
-  // Loop until we're reconnected
   while (!client.connected())
   {
     Serial.print("Attempting MQTT connection...");
-    // Attempt to connect
     if (client.connect(ID))
     {
       Serial.println("connected");
@@ -52,50 +57,56 @@ void reconnect()
     else
     {
       Serial.println(" try again in 5 seconds");
-      // Wait 5 seconds before retrying
       delay(5000);
     }
   }
 }
 
+int randomize(int lastNumber)
+{
+  while (true) {
+    int randomNumber = (rand() %200) + 1;
+    if(randomNumber - lastNumber < 30 || lastNumber - randomNumber < 30)
+      return randomNumber;
+  }
+  return 0;
+}
+
+void createAndSendPhases() 
+{
+  L1 = randomize(L1);
+  L2 = randomize(L2);
+  L3 = randomize(L3);
+
+  String temp = String(L1);
+  temp += ',';
+  temp += String(L2);
+  temp += ',';
+  temp += String(L3);
+
+  char* payload = new char [temp.length() + 1];
+  strcpy(payload, temp.c_str());
+
+  client.publish(TOPIC, payload);
+
+}
 void setup()
 {
-  Serial.begin(9600);             // Start serial communication at 115200 baud
-  pinMode(SWITCH_PIN, INPUT);     // Configure SWITCH_Pin as an input
-  digitalWrite(SWITCH_PIN, HIGH); // enable pull-up resistor (active low)
+  Serial.begin(9600);
   delay(100);
-  setup_wifi(); // Connect to network
+  setup_wifi();
   client.setServer(broker, port);
+  srand(time(NULL));
 }
 
 void loop()
 {
-  if (!client.connected()) // Reconnect if connection is lost
-  {
+  
+  if (!client.connected())
     reconnect();
-  }
+  
   client.loop();
 
-  // if the switch is being pressed
-  if (digitalRead(SWITCH_PIN) == 0)
-  {
-    state = !state; //toggle state
-    if (state == 1) // ON
-    {
-      client.publish(TOPIC, "on");
-      Serial.println((String)TOPIC + " => on");
-    }
-    else // OFF
-    {
-      client.publish(TOPIC, "off");
-      Serial.println((String)TOPIC + " => off");
-    }
-
-    while (digitalRead(SWITCH_PIN) == 0) // Wait for switch to be released
-    {
-      // Let the ESP handle some behind the scenes stuff if it needs to
-      yield();
-      delay(20);
-    }
-  }
+  createAndSendPhases();
+  delay(5000);
 }
